@@ -1,66 +1,88 @@
 import ticketListReducer from '../../reducers/ticket-list-reducer';
 
 describe('ticketListReducer', () => {
+	let action;
 
-    let action;
+	const currentState = {
+		1: {
+			names: 'Ryan & Aimen',
+			location: '4b',
+			issue: 'Redux action is not working correctly.',
+			id: 1
+		},
+		2: {
+			names: 'Jasmine and Justine',
+			location: '2a',
+			issue: 'Reducer has side effects.',
+			id: 2
+		}
+	};
 
-    const currentState = {
-      1: {names: 'Ryan & Aimen',
-      location: '4b',
-      issue: 'Redux action is not working correctly.',
-      id: 1 },
-      2: {names: 'Jasmine and Justine',
-      location: '2a',
-      issue: 'Reducer has side effects.',
-      id: 2 }
-    }
+	const ticketData = {
+		names: 'Ryan & Aimen',
+		location: '4b',
+		issue: 'Redux action is not working correctly.',
+		timeOpen: 0,
+		id: 1
+	};
 
-    const ticketData = {
-      names: 'Ryan & Aimen',
-      location: '4b',
-      issue: 'Redux action is not working correctly.',
-      id: 1
-    };
+	// Test One
+	test('Should return default state if no action type is recognized', () => {
+		expect(ticketListReducer({}, { type: null })).toEqual({});
+	});
 
+	// Test Two
+	test('Should successfully add new ticket data to masterTicketList', () => {
+		const { names, location, issue, id } = ticketData;
+		action = {
+			type: 'ADD_TICKET',
+			names: names,
+			location: location,
+			issue: issue,
+			id: id
+		};
+		expect(ticketListReducer({}, action)).toEqual({
+			[id]: {
+				names: names,
+				location: location,
+				issue: issue,
+				id: id
+			}
+		});
+	});
 
-    // Test One
-    test('Should return default state if no action type is recognized', () => {
-      expect(ticketListReducer({}, { type: null })).toEqual({});
-    });
+	// Test Three
+	test('Should successfully delete a ticket', () => {
+		action = {
+			type: 'DELETE_TICKET',
+			id: 1
+		};
+		expect(ticketListReducer(currentState, action)).toEqual({
+			2: {
+				names: 'Jasmine and Justine',
+				location: '2a',
+				issue: 'Reducer has side effects.',
+				id: 2
+			}
+		});
+	});
 
-
-    // Test Two
-    test('Should successfully add new ticket data to masterTicketList', () => {
-      const { names, location, issue, id } = ticketData;
-      action = {
-        type: 'ADD_TICKET',
-        names: names,
-        location: location,
-        issue: issue,
-        id: id
-      };
-      expect(ticketListReducer({}, action)).toEqual({
-        [id] : {
-          names: names,
-          location: location,
-          issue: issue,
-          id: id
-        }
-      });
-    });
-
-    // Test Three
-    test('Should successfully delete a ticket', () => {
-      action = {
-        type: 'DELETE_TICKET',
-        id: 1
-      };
-      expect(ticketListReducer(currentState, action)).toEqual({
-        2: {names: 'Jasmine and Justine',
-          location: '2a',
-          issue: 'Reducer has side effects.',
-          id: 2 }
-      });
-    });
-
+	test('Should add a formatted wait time to ticket entry', () => {
+		const { names, location, issue, timeOpen, id } = ticketData;
+		action = {
+			type: c.UPDATE_TIME,
+			formattedWaitTime: '4 minutes',
+			id: id
+		};
+		expect(ticketListReducer({ [id]: ticketData }, action)).toEqual({
+			[id]: {
+				names: names,
+				location: location,
+				issue: issue,
+				timeOpen: timeOpen,
+				id: id,
+				formattedWaitTime: '4 minutes'
+			}
+		});
+	});
 });
