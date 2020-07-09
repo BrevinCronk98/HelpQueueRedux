@@ -17,12 +17,15 @@ describe('help queue actions', () => {
 	});
 
 	// Test Three
-	it('addTicket should crerate ADD_TICKET action', () => {
+	it('addTicket should create ADD_TICKET action', () => {
 		expect(
 			actions.addTicket({ names: 'Jo and Jasmine', location: '3E', issue: 'Redux not working', id: 1 })
 		).toEqual({
 			type: 'ADD_TICKET',
-			names: 'Jo and Jasmine'
+			names: 'Jo and Jasmine',
+			location: '3E',
+			issue: 'Redux not working',
+			id: 1
 		});
 	});
 });
