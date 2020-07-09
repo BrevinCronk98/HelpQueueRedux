@@ -1,5 +1,6 @@
 import ticketListReducer from '../../reducers/ticket-list-reducer';
 import * as c from '../../actions/actionTypes';
+import Moment from 'moment';
 
 describe('ticketListReducer', () => {
 	let action;
@@ -36,7 +37,7 @@ describe('ticketListReducer', () => {
 	test('Should successfully add new ticket data to masterTicketList', () => {
 		const { names, location, issue, id } = ticketData;
 		action = {
-			type: 'ADD_TICKET',
+			type: c.ADD_TICKET,
 			names: names,
 			location: location,
 			issue: issue,
@@ -55,7 +56,7 @@ describe('ticketListReducer', () => {
 	// Test Three
 	test('Should successfully delete a ticket', () => {
 		action = {
-			type: 'DELETE_TICKET',
+			type: c.DELETE_TICKET,
 			id: 1
 		};
 		expect(ticketListReducer(currentState, action)).toEqual({
@@ -83,6 +84,29 @@ describe('ticketListReducer', () => {
 				timeOpen: timeOpen,
 				id: id,
 				formattedWaitTime: '4 minutes'
+			}
+		});
+	});
+
+	test('Should successfully add a ticket to the ticket list that includes Moment-formatted wait times', () => {
+		const { names, location, issue, timeOpen, id } = ticketData;
+		action = {
+			type: c.ADD_TICKET,
+			names: names,
+			location: location,
+			issue: issue,
+			timeOpen: timeOpen,
+			id: id,
+			formattedWaitTime: new Moment().fromNow(true)
+		};
+		expect(ticketListReducer({}, action)).toEqual({
+			[id]: {
+				names: names,
+				location: location,
+				issue: issue,
+				timeOpen: timeOpen,
+				id: id,
+				formattedWaitTime: 'a few seconds'
 			}
 		});
 	});
