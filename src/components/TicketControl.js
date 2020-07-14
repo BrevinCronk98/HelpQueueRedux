@@ -56,26 +56,27 @@ class TicketControl extends React.Component {
 		dispatch(action);
 	};
 
-	// handleEditingTicketInList = (ticketToEdit) => {
-	// 	const { dispatch } = this.props;
-	// 	const { id, names, location, issue } = ticketToEdit;
-	// 	const action = a.addTicket(ticketToEdit);
-	// 	dispatch(action);
-	// 	this.setState({
-	// 		editing: false,
-	// 		selectedTicket: null
-	// 	});
-	// };
+	handleEditingTicketInList = () => {
+		this.setState({
+			editing: false,
+			selectedTicket: null
+		});
+	};
 
 	handleChangingSelectedTicket = (id) => {
-		const selectedTicket = this.state.masterTicketList.filter((ticket) => ticket.id === id)[0];
-		this.setState({ selectedTicket: selectedTicket });
+		this.props.firestore.get({ collection: 'tickets', doc: id }).then((ticket) => {
+			const firestoreTicket = {
+				names: ticket.get('names'),
+				location: ticket.get('location'),
+				issue: ticket.get('issue'),
+				id: ticket.id
+			};
+			this.setState({ selectedTicket: firestoreTicket });
+		});
 	};
 
 	handleDeletingTicket = (id) => {
-		const { dispatch } = this.props;
-		const action = a.deleteTicket(id);
-		dispatch(action);
+		this.props.firestore.delete({ collection: 'tickets', doc: id });
 		this.setState({ selectedTicket: null });
 	};
 

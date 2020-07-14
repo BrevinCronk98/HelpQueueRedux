@@ -17,7 +17,7 @@ function NewTicketForm(props) {
 		});
 	}
 
-	return <ReusableForm formSubmissionHandler={addTicketToFirestore} buttonText="Help" />;
+	return <ReusableForm formSubmissionHandler={addTicketToFirestore} buttonText="Add" />;
 }
 
 export default NewTicketForm;
