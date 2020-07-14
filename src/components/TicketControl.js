@@ -29,7 +29,12 @@ class TicketControl extends React.Component {
 	}
 
 	updateTicketElapsedWaitTime = () => {
-		console.log('tick');
+		const { dispatch } = this.props;
+		Object.values(this.props.masterTicketList).forEach((ticket) => {
+			const newFormattedWaitTime = ticket.timeOpen.fromNow(true);
+			const action = a.updateTime(ticket.id, newFormattedWaitTime);
+			dispatch(action);
+		});
 	};
 
 	handleClick = () => {
@@ -45,25 +50,22 @@ class TicketControl extends React.Component {
 		}
 	};
 
-	handleAddingNewTicketToList = (newTicket) => {
+	handleAddingNewTicketToList = () => {
 		const { dispatch } = this.props;
-		const { id, names, location, issue } = newTicket;
-		const action = a.addTicket(newTicket);
+		const action = a.toggleForm();
 		dispatch(action);
-		const action2 = a.toggleForm();
-		dispatch(action2);
 	};
 
-	handleEditingTicketInList = (ticketToEdit) => {
-		const { dispatch } = this.props;
-		const { id, names, location, issue } = ticketToEdit;
-		const action = a.addTicket(ticketToEdit);
-		dispatch(action);
-		this.setState({
-			editing: false,
-			selectedTicket: null
-		});
-	};
+	// handleEditingTicketInList = (ticketToEdit) => {
+	// 	const { dispatch } = this.props;
+	// 	const { id, names, location, issue } = ticketToEdit;
+	// 	const action = a.addTicket(ticketToEdit);
+	// 	dispatch(action);
+	// 	this.setState({
+	// 		editing: false,
+	// 		selectedTicket: null
+	// 	});
+	// };
 
 	handleChangingSelectedTicket = (id) => {
 		const selectedTicket = this.state.masterTicketList.filter((ticket) => ticket.id === id)[0];

@@ -5,18 +5,30 @@ import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import rootReducer from './reducers/index'
+import rootReducer from './reducers/index';
+import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
+import { createFirestoreInstance } from 'redux-firestore';
+import firebase from './firebase';
 
 const store = createStore(rootReducer);
-store.subscribe(() =>
-  console.log(store.getState())
-);
+
+const rrfProps = {
+	firebase,
+	config: {
+		userProfile: 'users'
+	},
+	dispatch: store.dispatch,
+	createFirestoreInstance
+};
+store.subscribe(() => console.log(store.getState()));
 
 ReactDOM.render(
-    <Provider store={store}>
-    <App />
-    </Provider>,
-  document.getElementById('root')
+	<Provider store={store}>
+		<ReactReduxFirebaseProvider {...rrfProps}>
+			<App />
+		</ReactReduxFirebaseProvider>
+	</Provider>,
+	document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
